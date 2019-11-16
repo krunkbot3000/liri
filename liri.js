@@ -3,9 +3,13 @@ var axios = require("axios");
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
 
+
+
 // SPOTIFY KEY
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
+
+
 
 // INPUT VARIABLES
 var userAction = process.argv[2];
@@ -25,6 +29,8 @@ switch (userAction) {
     break;
 }
 
+
+
 // SEARCH SPOTIFY API
 function searchSong() {
   spotify.search({ type: 'track', query: userChoice }, function (err, data) {
@@ -40,6 +46,9 @@ function searchSong() {
   });
 
 }
+
+
+
 // SEARCH BAND IS IN TOWN API.
 function searchBand() {
   var queryUrl = "https://rest.bandsintown.com/artists/" + userChoice + "/events?app_id=codingbootcamp&limit=20";
@@ -50,7 +59,9 @@ function searchBand() {
       console.log("Search: " + userChoice);
       console.log("---------------------------------");
       for (i = 0; i < response.data.length; i++) {
+
         
+
         //VENUES WITHOUT REGIONS
         if (response.data[i].venue.region === "") {
           console.log(response.data[i].venue.name);
@@ -58,6 +69,8 @@ function searchBand() {
           console.log(moment(response.data[i].datetime).format('MM-DD-YYYY'));
           console.log("---------------------------------");
         }
+
+
         // VENUES WITH REGIONS
         else {
           console.log(response.data[i].venue.name);
@@ -70,6 +83,8 @@ function searchBand() {
     .catch(function (error) {
       if (error.response) {
         
+
+
         // ERROR RESPONSES
         console.log("---------------Data---------------");
         console.log(error.response.data);
@@ -89,9 +104,13 @@ function searchBand() {
 
 }
 
+
+
 // SEARCH OMDB API
 function searchMovie() {
   var queryUrl = "http://www.omdbapi.com/?t=" + userChoice + "&y=&plot=short&apikey=trilogy";
+
+
 
   //OMDB API REQUESTS
   axios.get(queryUrl).then(
@@ -110,6 +129,8 @@ function searchMovie() {
     .catch(function (error) {
       if (error.response) {
 
+
+        
         // ERROR RESPONSES
         console.log("---------------Data---------------");
         console.log(error.response.data);

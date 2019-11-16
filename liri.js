@@ -3,16 +3,14 @@ var axios = require("axios");
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
 
-// Spotify keys
+// SPOTIFY KEY
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
 
-// Grab user input and set to the following global variables
+// INPUT VARIABLES
 var userAction = process.argv[2];
 var userChoice = process.argv[3];
 
-// Determines which process to perform.
-// Based on userChoice run one of the following
 switch (userAction) {
   case "spotify-this-song":
     searchSong(userChoice);
@@ -27,11 +25,11 @@ switch (userAction) {
     break;
 }
 
-// Function to search for song information usinfg spotify API
+// SEARCH SPOTIFY API
 function searchSong() {
   spotify.search({ type: 'track', query: userChoice }, function (err, data) {
     if (err) {
-      return console.log('Error occurred: ' + err);
+      return console.log('Error: ' + err);
     }
     console.log("--------- SPOTIFY THIS SONG ---------");
     console.log("Artist(s): " + data.tracks.items[0].artists[0].name);
@@ -42,7 +40,7 @@ function searchSong() {
   });
 
 }
-// Function to search for Band information usinfg axios and bands in town API.
+// SEARCH BAND IS IN TOWN API.
 function searchBand() {
   var queryUrl = "https://rest.bandsintown.com/artists/" + userChoice + "/events?app_id=codingbootcamp&limit=20";
   axios.get(queryUrl).then(
@@ -52,14 +50,15 @@ function searchBand() {
       console.log("Search: " + userChoice);
       console.log("---------------------------------");
       for (i = 0; i < response.data.length; i++) {
-        // If the venue doesn't have a region run the following
+        
+        //VENUES WITHOUT REGIONS
         if (response.data[i].venue.region === "") {
           console.log(response.data[i].venue.name);
           console.log(response.data[i].venue.city + ", " + response.data[i].venue.country);
           console.log(moment(response.data[i].datetime).format('MM-DD-YYYY'));
           console.log("---------------------------------");
         }
-        // If venue has a region run the following
+        // VENUES WITH REGIONS
         else {
           console.log(response.data[i].venue.name);
           console.log(response.data[i].venue.city + ", " + response.data[i].venue.region + ", " + response.data[i].venue.country);
@@ -70,8 +69,8 @@ function searchBand() {
     })
     .catch(function (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
+        
+        // ERROR RESPONSES
         console.log("---------------Data---------------");
         console.log(error.response.data);
         console.log("---------------Status---------------");
@@ -79,11 +78,10 @@ function searchBand() {
         console.log("---------------Status---------------");
         console.log(error.response.headers);
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an object that comes back with details pertaining to the error that occurred.
+        
         console.log(error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
+        
         console.log("Error", error.message);
       }
       console.log(error.config);
@@ -91,11 +89,11 @@ function searchBand() {
 
 }
 
-// Function to search for movie information using axios and OMDB API
+// SEARCH OMDB API
 function searchMovie() {
   var queryUrl = "http://www.omdbapi.com/?t=" + userChoice + "&y=&plot=short&apikey=trilogy";
 
-  // Run a request with axios to the OMDB API with the movie specified
+  //OMDB API REQUESTS
   axios.get(queryUrl).then(
     function (response) {
       console.log("--------- MOVIE THIS ---------");
@@ -111,8 +109,8 @@ function searchMovie() {
     })
     .catch(function (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
+
+        // ERROR RESPONSES
         console.log("---------------Data---------------");
         console.log(error.response.data);
         console.log("---------------Status---------------");
@@ -120,11 +118,10 @@ function searchMovie() {
         console.log("---------------Status---------------");
         console.log(error.response.headers);
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an object that comes back with details pertaining to the error that occurred.
+        
         console.log(error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
+        
         console.log("Error", error.message);
       }
       console.log(error.config);
